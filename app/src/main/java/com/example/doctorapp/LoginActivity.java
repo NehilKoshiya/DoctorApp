@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth auth;
     TextView forgot_password;
     ProgressBar progressBar;
+    TextView createAcc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         btn_lgn = findViewById(R.id.btn_lgn);
         forgot_password = findViewById(R.id.forgot_password);
         progressBar = findViewById(R.id.prgBar);
+        createAcc  = findViewById(R.id.createAcc);
 
 
         auth = FirebaseAuth.getInstance();
@@ -70,6 +72,13 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+        createAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
             }
         });
     }

@@ -17,6 +17,8 @@
         android:layout_marginBottom="50dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:background="@drawable/drphoto"
         />
 
@@ -35,6 +37,7 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="text"
         android:layout_margin="10dp"
         android:padding="15dp"
         android:drawableLeft="@drawable/user"
@@ -48,6 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:inputType="textEmailAddress"
         android:padding="15dp"
         android:drawableLeft="@drawable/mail"
         android:drawablePadding="10dp"
@@ -60,6 +64,7 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textPassword"
         android:layout_margin="10dp"
         android:padding="15dp"
         android:drawableLeft="@drawable/lock"
@@ -83,6 +88,27 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/shapelogin"/>
+        android:background="@drawable/shapelogin"
+        android:visibility="visible"/>
+
+    <ProgressBar
+        android:id="@+id/prgBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progress="25"
+        android:indeterminateDrawable="@drawable/progress"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/alreayAcc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reLayout2"
+        android:layout_centerHorizontal="true"
+        android:text="I have an already account !"
+        android:textColor="#6C63FF" />
+
 
 </LinearLayout>

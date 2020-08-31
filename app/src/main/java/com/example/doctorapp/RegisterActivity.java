@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +29,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     DatabaseReference reference;
-
+    ProgressBar progressBar;
+    TextView alreadyAccount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,23 +40,38 @@ public class RegisterActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         btn_register = findViewById(R.id.btn_register);
+        progressBar = findViewById(R.id.prgBar);
+        alreadyAccount = findViewById(R.id.alreayAcc);
         auth = FirebaseAuth.getInstance();
 
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                btn_register.setVisibility(View.GONE);
                 String txt_username = username.getText().toString();
                 String txt_email = email.getText().toString();
 
                 String txt_password = password.getText().toString();
 
                 if (TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)) {
+                    progressBar.setVisibility(View.GONE);
+                    btn_register.setVisibility(View.VISIBLE);
                     Toast.makeText(RegisterActivity.this, "All Feilds Are Required !", Toast.LENGTH_SHORT).show();
                 } else if (txt_password.length() < 6) {
+                    progressBar.setVisibility(View.GONE);
+                    btn_register.setVisibility(View.VISIBLE);
                     Toast.makeText(RegisterActivity.this, "Password Length Is < 6!", Toast.LENGTH_SHORT).show();
                 } else {
                     register(txt_username, txt_email, txt_password);
                 }
+            }
+        });
+
+        alreadyAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
             }
         });
 
@@ -88,6 +106,8 @@ public class RegisterActivity extends AppCompatActivity {
                     });
 
                 } else {
+                    progressBar.setVisibility(View.GONE);
+                    btn_register.setVisibility(View.VISIBLE);
                     Toast.makeText(RegisterActivity.this, "You Can't Register With This Email!!", Toast.LENGTH_SHORT).show();
                 }
             }
