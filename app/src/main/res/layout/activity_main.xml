@@ -16,19 +16,19 @@
         android:id="@+id/textv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dr.Mob"
+        android:text="Dr. Mob"
         android:textColor="#6C63FF"
         android:layout_marginBottom="100dp"
         android:fontFamily="sans-serif-black"
         android:textSize="30dp"/>
-<!--    <ImageView-->
-<!--        android:layout_width="300dp"-->
-<!--        android:layout_height="200dp"-->
-<!--        android:layout_marginBottom="100dp"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:background="@drawable/drphoto"-->
-<!--        />-->
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/drphoto"
+        />
 
     <Button
         android:id="@+id/logi"
