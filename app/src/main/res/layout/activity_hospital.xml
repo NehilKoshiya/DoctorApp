@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:fitsSystemWindows="true"
+    android:padding="20dp">
+
+
+
+    <Button
+        android:id="@+id/btn_mh"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:text="Multispeciality                              Hospital"
+        android:textSize="20dp"
+        android:textColor="#fff"
+        android:shadowColor="@android:color/transparent"
+        android:padding="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/shapelogin"/>
+
+    <Button
+        android:id="@+id/btn_vh"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:text="verbal-level                              Hospital"
+        android:textSize="20dp"
+        android:textColor="#fff"
+        android:shadowColor="@android:color/transparent"
+        android:padding="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/shapelogin"/>
+
+    <Button
+        android:id="@+id/btn_lh"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:text="local-level                              Hospital"
+        android:textSize="20dp"
+        android:textColor="#fff"
+        android:shadowColor="@android:color/transparent"
+        android:padding="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/shapelogin"/>
+
+</LinearLayout>
