@@ -14,19 +14,19 @@
     <ImageView
         android:layout_width="300dp"
         android:layout_height="200dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="@drawable/drphoto"
+        android:background="@drawable/ic_health"
         />
 
     <TextView
         android:id="@+id/textv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dr.Mob"
+        android:text="Registration"
         android:textColor="#6C63FF"
         android:layout_marginBottom="40dp"
         android:fontFamily="sans-serif-black"

@@ -43,6 +43,8 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.prgBar);
         alreadyAccount = findViewById(R.id.alreayAcc);
         auth = FirebaseAuth.getInstance();
+        getSupportActionBar().hide();
+
 
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override

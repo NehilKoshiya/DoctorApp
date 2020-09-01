@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         forgot_password = findViewById(R.id.forgot_password);
         progressBar = findViewById(R.id.prgBar);
         createAcc  = findViewById(R.id.createAcc);
+        getSupportActionBar().hide();
 
 
         auth = FirebaseAuth.getInstance();

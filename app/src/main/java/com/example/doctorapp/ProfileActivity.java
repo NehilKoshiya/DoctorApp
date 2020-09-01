@@ -2,9 +2,11 @@ package com.example.doctorapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,11 +23,18 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "TAG";
     private AppBarConfiguration mAppBarConfiguration;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
@@ -39,19 +48,48 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("username");
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         View headerView = navigationView.getHeaderView(0);
 
-        TextView tt1 = (TextView) headerView.findViewById(R.id.username);
-        tt1.setText(firebaseUser.getDisplayName());
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Header View");
+                startActivity(new Intent(ProfileActivity.this, userProfile.class));
+            }
+        });
 
+        final TextView tt1 = (TextView) headerView.findViewById(R.id.username);
+//        tt1.setText(reference.getKey());
+
+        Log.d(TAG, "onCreate: " + reference);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                dataSnapshot.getChildren();
+//                HashMap<String,Object> dataMap = (HashMap<String, Objec t>) dataSnapshot.getValue();
+                tt1.setText(dataSnapshot.getValue().toString());
+                Log.d(TAG, "onCreate: " + dataSnapshot.getValue());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+        
         TextView tt = (TextView) headerView.findViewById(R.id.email);
         tt.setText(firebaseUser.getEmail());
-
-
+        
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: Click On Image!");
+//            }
+//        });
+//
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -103,9 +141,11 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_home) {
+            Log.d(TAG, "onNavigationItemSelected: Home selected");
 
 
-        } else if (id == R.id.logout) {
+        }
+        else if (id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getApplicationContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             return true;
