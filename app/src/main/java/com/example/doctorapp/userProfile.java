@@ -1,108 +1,187 @@
 package com.example.doctorapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
-
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class userProfile extends AppCompatActivity {
-    private static final String TAG = "TAG";
-    Button chooseImgBtn ;
-    CircleImageView circleImageView;
 
+public class userProfile extends AppCompatActivity {
+    private static final String TAG = "Tag";
+    Button btnSelect,btnSubmit;
+     CircleImageView imageView;
+     Uri filePath;
+     EditText editUserName;
+     EditText editEmail;
+     final int PICK_IMAGE_REQUEST = 22;
+
+     FirebaseStorage storage;
+     StorageReference storageReference;
+     FirebaseUser firebaseUser;
+     DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         getSupportActionBar().setTitle("User Profile");
 
-        chooseImgBtn = findViewById(R.id.btn_chs_img);
-        circleImageView = findViewById(R.id.profile_image);
+        btnSelect = findViewById(R.id.btn_chs_img);
+        btnSubmit = findViewById(R.id.btn_submit);
+        imageView = findViewById(R.id.profile_image);
+        editEmail = findViewById(R.id.email_text);
+        editUserName = findViewById(R.id.username_txt);
+        editEmail.setEnabled(false);
 
-        chooseImgBtn.setOnClickListener(new View.OnClickListener() {
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
+
+        StorageReference reference =  FirebaseStorage.getInstance().getReference().child("images").child(firebaseUser.getUid()+".jpeg");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange: "+ dataSnapshot.child("username").getValue());
+                editUserName.setText(dataSnapshot.child("username").getValue().toString());
+                editEmail.setText(firebaseUser.getEmail());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+//                Uri img = Uri.parse("https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
+
+                    Glide.with(getApplicationContext()).load(uri).override(200,200).centerCrop().into(imageView);
+
+            }
+
+        });
+
+        btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectImage(userProfile.this);
+                Log.d(TAG, "onClick: SelectImage");
+                SelectImage();
             }
         });
-    }
-    private void selectImage(Context context) {
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose your profile picture");
-
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (options[item].equals("Take Photo")) {
-                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, 0);
-
-                } else if (options[item].equals("Choose from Gallery")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto , 1);
-
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Upload Image");
+                if(filePath != null) {
+                    UploadImage();
                 }
+                String editedText = editUserName.getText().toString();
+                FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("username").setValue(editedText);
+                Log.d(TAG, "onClick: "+ editedText);
+                if(filePath == null){
+                    finish();
+                }
+
             }
-
         });
-        builder.show();
-
     }
-    @SuppressLint("MissingSuperCall")
+
+
+    private void SelectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Image From Here...."),PICK_IMAGE_REQUEST);
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != RESULT_CANCELED) {
-            switch (requestCode) {
-                case 0:
-                    if (resultCode == RESULT_OK && data != null) {
-                        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
-                        circleImageView.setImageBitmap(selectedImage);
-                    }
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-                    break;
-                case 1:
-                    if (resultCode == RESULT_OK && data != null) {
-                        Uri selectedImage =  data.getData();
-                        
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                        if (selectedImage != null) {
-                            Cursor cursor = getContentResolver().query(selectedImage,
-                                    filePathColumn, null, null, null);
-                            if (cursor != null) {
-                                cursor.moveToFirst();
-
-                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                String picturePath = cursor.getString(columnIndex);
-                                circleImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                                cursor.close();
-                            }
-                        }
-
-                    }
-                    break;
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),filePath);
+                imageView.setImageBitmap(bitmap);
+            }catch (IOException e){
+                e.printStackTrace();
             }
         }
     }
 
+    private void UploadImage() {
+
+        if(filePath != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            StorageReference reference = storageReference.child("images/"+ firebaseUser.getUid()+".jpeg");
+
+            reference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Toast.makeText(userProfile.this,"Image Uploaded!",Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(userProfile.this,"Failed"+e.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                    progressDialog.setMessage("Loading... " + ((int) progress) + "%");
+
+                }
+            });
+        }
+
+    }
 }
