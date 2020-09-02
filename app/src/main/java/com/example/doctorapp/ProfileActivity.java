@@ -7,19 +7,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +41,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -45,15 +54,50 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     private AppBarConfiguration mAppBarConfiguration;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
-    FirebaseAuth firebaseAuth;
+    TextView headingText;
+    RecyclerView recyclerView;
+    LinearLayout linearLayout;
+    DoctorListAdapter doctorListAdapter;
+    Spinner dropdown;
+
+    CardView multiCard,verbalCard,localCard;
+
+    List<DoctorListModel> drList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.recy1);
+        multiCard = findViewById(R.id.multiCard);
+        verbalCard = findViewById(R.id.verbalCard);
+        localCard = findViewById(R.id.localCard);
+        headingText = findViewById(R.id.mainHead);
+        linearLayout = findViewById(R.id.heading);
+        dropdown = findViewById(R.id.spinner);
+
+        String[] items = new String[]{"Multispeciality","Verbal","Local"};
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Dr. Mob");
 
+        drList = new ArrayList<>();
+        drList.add(new DoctorListModel("Dr. Amit Butani","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+
+        doctorListAdapter = new DoctorListAdapter(drList,getApplicationContext());
+        recyclerView.setAdapter(doctorListAdapter);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("username");
@@ -61,6 +105,40 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         navigationView.setNavigationItemSelectedListener(this);
 
         View headerView = navigationView.getHeaderView(0);
+
+        multiCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multiCard.setVisibility(View.GONE);
+                verbalCard.setVisibility(View.GONE);
+                localCard.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                headingText.setText("Multispeciality Hospital");
+            }
+        });
+        verbalCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multiCard.setVisibility(View.GONE);
+                verbalCard.setVisibility(View.GONE);
+                localCard.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                headingText.setText("Verbal Level Hospital");
+            }
+        });
+        localCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multiCard.setVisibility(View.GONE);
+                verbalCard.setVisibility(View.GONE);
+                localCard.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                headingText.setText("Local Level Hospital");
+            }
+        });
 
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,13 +208,12 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         return true;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-
+//    @Override
+//    public boolean onSupportNavigateUp() {
+//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+//        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+//                || super.onSupportNavigateUp();
+//    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -156,15 +233,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_slideshow) {
-
-
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_home) {
-            Log.d(TAG, "onNavigationItemSelected: Home selected");
-        }
-        else if (id == R.id.logout) {
+      if (id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getApplicationContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             return true;

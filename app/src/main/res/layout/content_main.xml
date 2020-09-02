@@ -1,20 +1,264 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar_main"
+    android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <LinearLayout
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/mobile_navigation" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:orientation="vertical"
+        android:visibility="visible"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/_15sdp"
+            >
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/multiCard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_120sdp"
+                app:cardBackgroundColor="#6C63FF"
+                app:cardCornerRadius="@dimen/_15sdp"
+                android:layout_margin="@dimen/_15sdp"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_20sdp">
+
+                    <TextView
+                        android:id="@+id/headingText1"
+                        android:layout_width="@dimen/_140sdp"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/_12sdp"
+                        android:text="Multispeciality"
+                        android:textColor="#fff"
+                        android:fontFamily="sans-serif-black"
+                        android:textSize="@dimen/_20sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/headingText2"
+                        android:gravity="center"
+                        android:layout_width="@dimen/_140sdp"
+                        android:layout_height="wrap_content"
+                        android:text="Hospital"
+                        android:textColor="#fff"
+                        android:fontFamily="sans-serif-black"
+                        android:textSize="@dimen/_20sdp"
+                        android:layout_below="@+id/headingText1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <ImageView
+                        android:layout_width="@dimen/_100sdp"
+                        android:layout_height="@dimen/_80sdp"
+                        android:background="@drawable/ic_doctor"
+                        android:layout_toEndOf="@+id/headingText1"
+                        android:layout_toRightOf="@+id/headingText1" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/_15sdp"
+            >
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/verbalCard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_120sdp"
+                app:cardBackgroundColor="#6C63FF"
+                app:cardCornerRadius="@dimen/_15sdp"
+                android:layout_margin="@dimen/_15sdp"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_20sdp">
+
+                    <TextView
+                        android:id="@+id/headingText3"
+                        android:layout_width="@dimen/_140sdp"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/_12sdp"
+                        android:text="Verbal-Level"
+                        android:textColor="#fff"
+                        android:fontFamily="sans-serif-black"
+                        android:textSize="@dimen/_20sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/headingText4"
+                        android:gravity="center"
+                        android:layout_width="@dimen/_140sdp"
+                        android:layout_height="wrap_content"
+                        android:text="Hospital"
+                        android:textColor="#fff"
+                        android:fontFamily="sans-serif-black"
+                        android:textSize="@dimen/_20sdp"
+                        android:layout_below="@+id/headingText3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <ImageView
+                        android:layout_width="@dimen/_100sdp"
+                        android:layout_height="@dimen/_80sdp"
+                        android:background="@drawable/ic_doctor"
+                        android:layout_toEndOf="@+id/headingText3"
+                        android:layout_toRightOf="@+id/headingText3" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/_15sdp"
+            >
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/localCard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_120sdp"
+                app:cardBackgroundColor="#6C63FF"
+                app:cardCornerRadius="@dimen/_15sdp"
+                android:layout_margin="@dimen/_15sdp"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_20sdp">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="@dimen/_140sdp"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/_12sdp"
+                        android:text="Local-Level"
+                        android:textColor="#fff"
+                        android:fontFamily="sans-serif-black"
+                        android:textSize="@dimen/_20sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:gravity="center"
+                        android:layout_width="@dimen/_140sdp"
+                        android:layout_height="wrap_content"
+                        android:text="Hospital"
+                        android:textColor="#fff"
+                        android:fontFamily="sans-serif-black"
+                        android:textSize="@dimen/_20sdp"
+                        android:layout_below="@+id/textView4"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <ImageView
+                        android:layout_width="@dimen/_100sdp"
+                        android:layout_height="@dimen/_80sdp"
+                        android:background="@drawable/ic_doctor"
+                        android:layout_toEndOf="@+id/textView4"
+                        android:layout_toRightOf="@+id/textView4" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/recycle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:id="@+id/heading"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/mainHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Multispeciality Hospital"
+                android:gravity="center"
+                android:textSize="@dimen/_22sdp"
+                android:textStyle="bold"
+                android:textColor="#6C63FF"
+            />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Doctor In your city"
+                android:gravity="center"
+                android:textSize="@dimen/_22sdp"
+                android:textStyle="bold"
+                android:textColor="#6C63FF"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            android:background="#2D676262"
+            />
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:background="@android:drawable/btn_dropdown"
+            android:visibility="gone"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recy1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recy2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recy3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+
+
+
+
+
+
+</RelativeLayout>
