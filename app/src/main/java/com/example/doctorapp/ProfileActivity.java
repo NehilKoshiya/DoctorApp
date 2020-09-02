@@ -1,6 +1,7 @@
 package com.example.doctorapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +21,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,9 +31,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Dr. Mob");
 
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -63,6 +71,19 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         });
 
         final TextView tt1 = (TextView) headerView.findViewById(R.id.username);
+        final CircleImageView profileImage = headerView.findViewById(R.id.profile_image);
+
+        StorageReference ref =  FirebaseStorage.getInstance().getReference().child("images").child(firebaseUser.getUid()+".jpeg");
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+//                Uri img = Uri.parse("https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
+
+                Glide.with(getApplicationContext()).load(uri).placeholder(R.drawable.profile).override(200,200).centerCrop().into(profileImage);
+
+            }
+
+        });
 //        tt1.setText(reference.getKey());
 
         Log.d(TAG, "onCreate: " + reference);
@@ -142,8 +163,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
         } else if (id == R.id.nav_home) {
             Log.d(TAG, "onNavigationItemSelected: Home selected");
-
-
         }
         else if (id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();

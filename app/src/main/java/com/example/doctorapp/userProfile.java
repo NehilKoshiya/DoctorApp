@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,7 +49,7 @@ public class userProfile extends AppCompatActivity {
      Uri filePath;
      EditText editUserName;
      EditText editEmail;
-     final int PICK_IMAGE_REQUEST = 22;
+     final int PICK_IMAGE_REQUEST = 20;
 
      FirebaseStorage storage;
      StorageReference storageReference;
@@ -61,6 +62,8 @@ public class userProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         getSupportActionBar().setTitle("User Profile");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         btnSelect = findViewById(R.id.btn_chs_img);
         btnSubmit = findViewById(R.id.btn_submit);
@@ -94,12 +97,14 @@ public class userProfile extends AppCompatActivity {
         reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-//                Uri img = Uri.parse("https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
-
-                    Glide.with(getApplicationContext()).load(uri).override(200,200).centerCrop().into(imageView);
-
+                    Glide.with(getApplicationContext()).load(uri).placeholder(R.drawable.profile).override(200,200).centerCrop().into(imageView);
             }
 
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: "+ e.getMessage());
+            }
         });
 
         btnSelect.setOnClickListener(new View.OnClickListener() {
@@ -121,13 +126,29 @@ public class userProfile extends AppCompatActivity {
                 FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("username").setValue(editedText);
                 Log.d(TAG, "onClick: "+ editedText);
                 if(filePath == null){
-                    finish();
+                    Intent intent = new Intent(userProfile.this,ProfileActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
                 }
 
             }
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private void SelectImage() {
         Intent intent = new Intent();
@@ -165,7 +186,11 @@ public class userProfile extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.dismiss();
                     Toast.makeText(userProfile.this,"Image Uploaded!",Toast.LENGTH_SHORT).show();
-                    finish();
+
+                    Intent intent = new Intent(userProfile.this,ProfileActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

@@ -61,6 +61,7 @@
           android:inputType="text"
           android:layout_below="@+id/username"
           android:padding="@dimen/_13sdp"
+          android:backgroundTint="#6C63FF"
           android:layout_marginHorizontal="@dimen/_10sdp"
           android:drawableLeft="@drawable/user"
           android:drawablePadding="10dp"
@@ -88,7 +89,7 @@
           android:drawableLeft="@drawable/mail"
           android:drawablePadding="10dp"
           android:hint="Email Address"
-          android:textColor="#000"
+          android:textColor="#A9A9A9"
           android:textColorHighlight="#6C63FF" />
 
       <Button

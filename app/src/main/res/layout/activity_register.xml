@@ -6,21 +6,20 @@
     android:background="#fff"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="20dp"
+    android:padding="@dimen/_18sdp"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
 
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:layout_marginBottom="30dp"
+        android:layout_width="@dimen/_240sdp"
+        android:layout_height="@dimen/_151sdp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:scaleType="fitCenter"
+        android:layout_marginBottom="@dimen/_28sdp"
         android:adjustViewBounds="true"
         android:background="@drawable/ic_health"
-        />
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/textv"
@@ -28,9 +27,9 @@
         android:layout_height="wrap_content"
         android:text="Registration"
         android:textColor="#6C63FF"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="@dimen/_30sdp"
         android:fontFamily="sans-serif-black"
-        android:textSize="30dp"/>
+        android:textSize="@dimen/_25sdp"/>
 
 
     <EditText
@@ -38,26 +37,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:layout_margin="10dp"
-        android:padding="15dp"
+        android:layout_margin="@dimen/_7sdp"
+        android:padding="@dimen/_11sdp"
         android:drawableLeft="@drawable/user"
-        android:drawablePadding="10dp"
+        android:drawablePadding="@dimen/_10sdp"
         android:hint="UserName"
-        android:textColor="#6C63FF"
-        android:textColorHint="#6C63FF"
+        android:backgroundTint="#6c63FF"
+        android:textColor="#000"
+        android:textColorHint="#A9A9A9"
+        android:textCursorDrawable="@drawable/color_cursor"
         android:textColorHighlight="#6C63FF"/>
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/_7sdp"
         android:inputType="textEmailAddress"
-        android:padding="15dp"
+        android:padding="@dimen/_11sdp"
         android:drawableLeft="@drawable/mail"
-        android:drawablePadding="10dp"
+        android:drawablePadding="@dimen/_10sdp"
         android:hint="Email"
-        android:textColor="#6C63FF"
-        android:textColorHint="#6C63FF"
+        android:backgroundTint="#6c63FF"
+        android:textColor="#000"
+        android:textColorHint="#A9A9A9"
+        android:textCursorDrawable="@drawable/color_cursor"
         android:textColorHighlight="#6C63FF"/>
 
     <EditText
@@ -65,13 +68,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:layout_margin="10dp"
-        android:padding="15dp"
+        android:layout_margin="@dimen/_7sdp"
+        android:padding="@dimen/_11sdp"
         android:drawableLeft="@drawable/lock"
-        android:drawablePadding="10dp"
+        android:drawablePadding="@dimen/_10sdp"
         android:hint="Password"
-        android:textColor="#6C63FF"
-        android:textColorHint="#6C63FF"
+        android:backgroundTint="#6c63FF"
+        android:textColor="#000"
+        android:textColorHint="#A9A9A9"
+        android:textCursorDrawable="@drawable/color_cursor"
         android:textColorHighlight="#6C63FF"/>
 
 
@@ -81,13 +86,13 @@
         android:layout_height="wrap_content"
         android:text="Sign Up"
         android:textColor="#fff"
-        android:textSize="20dp"
+        android:textSize="@dimen/_15sdp"
         android:shadowColor="@android:color/transparent"
-        android:padding="15dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="15dp"
+        android:padding="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:background="@drawable/shapelogin"
         android:visibility="visible"/>
 

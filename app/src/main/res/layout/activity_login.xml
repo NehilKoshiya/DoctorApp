@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:orientation="vertical"
     android:gravity="start"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
 
@@ -19,16 +19,6 @@
         android:layout_centerHorizontal="true"
          />
 
-<!--    <TextView-->
-<!--        android:id="@+id/textv"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Dr. Mob"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_below="@+id/image"-->
-<!--        android:textColor="#6C63FF"-->
-<!--        android:fontFamily="sans-serif-black"-->
-<!--        android:textSize="18dp"/>-->
     <TextView
         android:id="@+id/signInText"
         android:layout_width="wrap_content"
@@ -45,7 +35,7 @@
     <EditText
         android:id="@+id/email"
         android:inputType="textEmailAddress"
-
+        android:textCursorDrawable="@drawable/color_cursor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/signInText"
@@ -57,9 +47,10 @@
         android:drawablePadding="@dimen/_10sdp"
         android:hint="Email"
         android:padding="@dimen/_13sdp"
-        android:textColor="#6C63FF"
+        android:textColor="#000"
+        android:backgroundTint="#6C63FF"
         android:textColorHighlight="#6C63FF"
-        android:textColorHint="#6C63FF" />
+        android:textColorHint="#A9A9A9" />
 
     <EditText
         android:id="@+id/password"
@@ -76,9 +67,11 @@
         android:drawablePadding="@dimen/_10sdp"
         android:hint="Password"
         android:padding="@dimen/_13sdp"
-        android:textColor="#6C63FF"
+        android:backgroundTint="#6C63FF"
+        android:textColor="#000"
         android:textColorHighlight="#6C63FF"
-        android:textColorHint="#6C63FF" />
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textColorHint="#A9A9A9" />
 
         <RelativeLayout
             android:id="@+id/reLayout"

@@ -95,12 +95,8 @@ public class RegisterActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = auth.getCurrentUser();
                     String userid = firebaseUser.getUid();
-                    Uri imageUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() +
-                            R.drawable.profile);
-                    File file = new File(imageUri.getPath());
 
                     reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
-                    StorageReference ref =  FirebaseStorage.getInstance().getReference().child("images/"+ userid+".jpeg");
 
                     HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("id", userid);
@@ -112,10 +108,22 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
+                                FirebaseUser firebaseUser = auth.getCurrentUser();
+                                String userid = firebaseUser.getUid();
+
+                                StorageReference ref =  FirebaseStorage.getInstance().getReference().child("images/"+ userid+".jpeg");
+                                Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.profile);
+                                ref.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Log.d(TAG, "onSuccess: Success");
+                                        Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
+
                             }
                         }
                     });
