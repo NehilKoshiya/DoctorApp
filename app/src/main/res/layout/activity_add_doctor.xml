@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddDoctor"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/addDr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Doctor"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/image"
+        android:textColor="#6C63FF"
+        android:layout_marginBottom="@dimen/_25sdp"
+        android:fontFamily="sans-serif-black"
+        android:textSize="@dimen/_20sdp"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/dr_image"
+        android:layout_width="@dimen/_90sdp"
+        android:layout_height="@dimen/_90sdp"
+        android:src="@drawable/profile"
+        android:layout_centerVertical="false"
+        android:scaleType="centerCrop"
+        android:layout_centerHorizontal="true"
+        app:civ_border_width="@dimen/_1sdp"
+        app:civ_border_color="#FF000000"/>
+
+    <EditText
+        android:id="@+id/drName"
+        android:inputType="text"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:drawableLeft="@drawable/user"
+        android:drawablePadding="@dimen/_10sdp"
+        android:hint="Doctor Name"
+        android:padding="@dimen/_13sdp"
+        android:textColor="#000"
+        android:backgroundTint="#6C63FF"
+        android:textColorHighlight="#6C63FF"
+        android:textColorHint="#A9A9A9" />
+    <EditText
+        android:id="@+id/drDegree"
+        android:inputType="text"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:drawableLeft="@drawable/user"
+        android:drawablePadding="@dimen/_10sdp"
+        android:hint="Degree"
+        android:padding="@dimen/_13sdp"
+        android:textColor="#000"
+        android:backgroundTint="#6C63FF"
+        android:textColorHighlight="#6C63FF"
+        android:textColorHint="#A9A9A9" />
+
+    <EditText
+        android:id="@+id/address"
+        android:inputType="text"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:drawableLeft="@drawable/user"
+        android:drawablePadding="@dimen/_10sdp"
+        android:hint="Hospital Address"
+        android:padding="@dimen/_13sdp"
+        android:textColor="#000"
+        android:backgroundTint="#6C63FF"
+        android:textColorHighlight="#6C63FF"
+        android:textColorHint="#A9A9A9" />
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_gravity="center"
+            android:padding="2dp">
+            <RelativeLayout
+                android:id="@+id/spinnerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_weight=".28"
+                android:orientation="horizontal">
+                <Spinner
+                    android:id="@+id/codeSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:spinnerMode="dropdown"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/down_arrow" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:background="@drawable/shapelogin"
+        android:padding="@dimen/_10sdp"
+        android:shadowColor="@android:color/transparent"
+        android:text="Submit"
+        android:textColor="#fff"
+        android:textSize="@dimen/_18sdp"
+        android:visibility="visible" />
+</LinearLayout>

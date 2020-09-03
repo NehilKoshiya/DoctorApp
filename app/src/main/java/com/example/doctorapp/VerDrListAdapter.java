@@ -13,14 +13,14 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.ViewHolder> {
+public class VerDrListAdapter extends RecyclerView.Adapter<VerDrListAdapter.ViewHolder> {
 
-    List<DoctorListModel> drList;
+    List<VerbalDrListModal> verDrList;
     Context context;
 
-    DoctorListAdapter(List<DoctorListModel> drList,Context context){
-        this.drList=drList;
+    VerDrListAdapter(List<VerbalDrListModal> verDrList,Context context){
         this.context = context;
+        this.verDrList = verDrList;
     }
 
     @NonNull
@@ -32,17 +32,18 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DoctorListModel model = drList.get(position);
-        holder.profileImage.setImageResource(model.getProfileImage());
-        holder.drName.setText(model.getDrName());
-        holder.drDegree.setText(model.getDeDegree());
-        holder.address.setText(model.getAddress());
+
+        VerbalDrListModal verbalDrListModal = verDrList.get(position);
+        holder.profileImage.setImageResource(verbalDrListModal.getProfileImage());
+        holder.drName.setText(verbalDrListModal.getDrName());
+        holder.drDegree.setText(verbalDrListModal.getDeDegree());
+        holder.address.setText(verbalDrListModal.getAddress());
 
     }
 
     @Override
     public int getItemCount() {
-        return drList.size();
+        return verDrList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

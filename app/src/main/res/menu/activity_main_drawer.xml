@@ -4,7 +4,10 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-
+        <item
+            android:id="@+id/add_doctor"
+            android:icon="@drawable/ic_baseline_add_circle_outline_24"
+            android:title="Add Doctor" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_baseline_exit_to_app_24"

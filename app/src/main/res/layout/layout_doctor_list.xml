@@ -39,18 +39,20 @@
                 android:layout_weight="2"
                 android:layout_toEndOf="@+id/profileLay"
                 android:layout_toRightOf="@+id/profileLay"
+                android:gravity="center_vertical"
                 >
                 <TextView
                     android:id="@+id/drName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Dr. XYZ ABC"
-                    android:textSize="@dimen/_20sdp"/>
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_15sdp"/>
                 <TextView
                     android:id="@+id/degree"
                     android:layout_width="@dimen/_110sdp"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
+                    android:gravity="left"
                     android:text="(M.D,M.B.B.S,..)"
                     android:layout_below="@+id/drName"
                     android:textSize="@dimen/_10sdp"/>
@@ -77,7 +79,7 @@
                     android:text="FOLLOW"
                     android:textColor="#463DE1"
                     android:textStyle="bold"
-                    android:textSize="@dimen/_15sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:letterSpacing="0.1"
                     />
 

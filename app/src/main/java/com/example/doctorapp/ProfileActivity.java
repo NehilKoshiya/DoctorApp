@@ -55,49 +55,95 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     FirebaseUser firebaseUser;
     DatabaseReference reference;
     TextView headingText;
-    RecyclerView recyclerView;
-    LinearLayout linearLayout;
+    RecyclerView recyclerView1,recyclerView2,recyclerView3;
+    LinearLayout linearLayout,cardView;
     DoctorListAdapter doctorListAdapter;
+    VerDrListAdapter verDrListAdapter;
+    LocalDrListAdapter localDrListAdapter;
     Spinner dropdown;
 
     CardView multiCard,verbalCard,localCard;
 
     List<DoctorListModel> drList;
+    List<VerbalDrListModal> verbalDr;
+    List<LocalDrListModal> localDr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        recyclerView = findViewById(R.id.recy1);
+        recyclerView1 = findViewById(R.id.recy1);
+        recyclerView2 = findViewById(R.id.recy2);
+        recyclerView3 = findViewById(R.id.recy3);
         multiCard = findViewById(R.id.multiCard);
         verbalCard = findViewById(R.id.verbalCard);
         localCard = findViewById(R.id.localCard);
         headingText = findViewById(R.id.mainHead);
+        cardView = findViewById(R.id.cardView);
         linearLayout = findViewById(R.id.heading);
         dropdown = findViewById(R.id.spinner);
 
         String[] items = new String[]{"Multispeciality","Verbal","Local"};
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
+        recyclerView1.setLayoutManager(layoutManager);
+        recyclerView1.setHasFixedSize(true);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
+        recyclerView2.setLayoutManager(layoutManager2);
+        recyclerView2.setHasFixedSize(true);
+        LinearLayoutManager layoutManager3 = new LinearLayoutManager(this);
+        recyclerView3.setLayoutManager(layoutManager3);
+        recyclerView3.setHasFixedSize(true);
         setSupportActionBar(toolbar);
+        getSupportActionBar().hide();
         getSupportActionBar().setTitle("Dr. Mob");
 
         drList = new ArrayList<>();
-        drList.add(new DoctorListModel("Dr. Amit Butani","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Amit","M.B.B.S,M.D","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+
+        verbalDr = new ArrayList<>();
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+
+
+        localDr = new ArrayList<>();
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+
 
         doctorListAdapter = new DoctorListAdapter(drList,getApplicationContext());
-        recyclerView.setAdapter(doctorListAdapter);
+        recyclerView1.setAdapter(doctorListAdapter);
+//
+        verDrListAdapter = new VerDrListAdapter(verbalDr,getApplicationContext());
+        recyclerView2.setAdapter(verDrListAdapter);
+//
+        localDrListAdapter = new LocalDrListAdapter(localDr,getApplicationContext());
+        recyclerView3.setAdapter(localDrListAdapter);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("username");
@@ -109,33 +155,36 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         multiCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                multiCard.setVisibility(View.GONE);
-                verbalCard.setVisibility(View.GONE);
-                localCard.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+               cardView.setVisibility(View.GONE);
+                recyclerView1.setVisibility(View.VISIBLE);
+                recyclerView2.setVisibility(View.GONE);
+                recyclerView3.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
+                getSupportActionBar().show();
                 headingText.setText("Multispeciality Hospital");
             }
         });
         verbalCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                multiCard.setVisibility(View.GONE);
-                verbalCard.setVisibility(View.GONE);
-                localCard.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                cardView.setVisibility(View.GONE);
+                recyclerView1.setVisibility(View.GONE);
+                recyclerView2.setVisibility(View.VISIBLE);
+                recyclerView3.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
+                getSupportActionBar().show();
                 headingText.setText("Verbal Level Hospital");
             }
         });
         localCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                multiCard.setVisibility(View.GONE);
-                verbalCard.setVisibility(View.GONE);
-                localCard.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                cardView.setVisibility(View.GONE);
+                recyclerView1.setVisibility(View.GONE);
+                recyclerView2.setVisibility(View.GONE);
+                recyclerView3.setVisibility(View.VISIBLE);
                 linearLayout.setVisibility(View.VISIBLE);
+                getSupportActionBar().show();
                 headingText.setText("Local Level Hospital");
             }
         });
@@ -222,7 +271,32 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.ml) {
+            cardView.setVisibility(View.GONE);
+            recyclerView1.setVisibility(View.VISIBLE);
+            recyclerView2.setVisibility(View.GONE);
+            recyclerView3.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
+            getSupportActionBar().show();
+            headingText.setText("Multispeciality Hospital");
+            return true;
+        }else if(id == R.id.vl){
+            cardView.setVisibility(View.GONE);
+            recyclerView1.setVisibility(View.GONE);
+            recyclerView2.setVisibility(View.VISIBLE);
+            recyclerView3.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
+            getSupportActionBar().show();
+            headingText.setText("Verbal Level Hospital");
+            return true;
+        }else if(id == R.id.ll){
+            cardView.setVisibility(View.GONE);
+            recyclerView1.setVisibility(View.GONE);
+            recyclerView2.setVisibility(View.GONE);
+            recyclerView3.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.VISIBLE);
+            getSupportActionBar().show();
+            headingText.setText("Local Level Hospital");
             return true;
         }
 
@@ -237,9 +311,9 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getApplicationContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             return true;
-
-            
-        }
+        }else if(id == R.id.add_doctor){
+          startActivity(new Intent(getApplicationContext(), AddDoctor.class));
+      }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

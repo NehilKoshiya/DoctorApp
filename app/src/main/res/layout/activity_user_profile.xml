@@ -14,15 +14,15 @@
        android:layout_centerHorizontal="true"
        android:layout_centerVertical="true">
       <de.hdodenhof.circleimageview.CircleImageView
-          android:id="@+id/profile_image"
-          android:layout_width="@dimen/_90sdp"
-          android:layout_height="@dimen/_90sdp"
-          android:src="@drawable/profile"
-          android:layout_centerVertical="false"
-          android:scaleType="centerCrop"
-          android:layout_centerHorizontal="true"
-          app:civ_border_width="@dimen/_1sdp"
-          app:civ_border_color="#FF000000"/>
+       android:id="@+id/profile_image"
+       android:layout_width="@dimen/_90sdp"
+       android:layout_height="@dimen/_90sdp"
+       android:src="@drawable/profile"
+       android:layout_centerVertical="false"
+       android:scaleType="centerCrop"
+       android:layout_centerHorizontal="true"
+       app:civ_border_width="@dimen/_1sdp"
+       app:civ_border_color="#FF000000"/>
       <Button
           android:id="@+id/btn_chs_img"
           android:layout_width="match_parent"
