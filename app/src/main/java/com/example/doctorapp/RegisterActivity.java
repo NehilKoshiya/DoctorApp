@@ -98,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
 
-                    HashMap<String, String> hashMap = new HashMap<>();
+                    final HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("id", userid);
                     hashMap.put("username", username);
                     hashMap.put("imageURL", "default");
@@ -109,10 +109,10 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser firebaseUser = auth.getCurrentUser();
-                                String userid = firebaseUser.getUid();
+                                final String userid = firebaseUser.getUid();
 
-                                StorageReference ref =  FirebaseStorage.getInstance().getReference().child("images/"+ userid+".jpeg");
-                                Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.profile);
+                                final StorageReference ref =  FirebaseStorage.getInstance().getReference().child("images/"+ userid+".jpeg");
+                                Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.prof);
                                 ref.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -121,6 +121,25 @@ public class RegisterActivity extends AppCompatActivity {
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                         finish();
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                final HashMap<String, String> hashMap = new HashMap<>();
+                                                hashMap.put("id", userid);
+                                                hashMap.put("username", username);
+                                                hashMap.put("imageURL", uri.toString());
+                                                reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                       Toast.makeText(RegisterActivity.this,"Data Upload",Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                        });
                                     }
                                 });
 

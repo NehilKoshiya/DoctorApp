@@ -37,6 +37,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -49,6 +50,7 @@ public class userProfile extends AppCompatActivity {
      Uri filePath;
      EditText editUserName;
      EditText editEmail;
+     String imageUrl;
      final int PICK_IMAGE_REQUEST = 20;
 
      FirebaseStorage storage;
@@ -79,7 +81,7 @@ public class userProfile extends AppCompatActivity {
 
 
 
-        StorageReference reference =  FirebaseStorage.getInstance().getReference().child("images").child(firebaseUser.getUid()+".jpeg");
+//        StorageReference reference =  FirebaseStorage.getInstance().getReference().child("images").child(firebaseUser.getUid()+".jpeg");
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,6 +89,11 @@ public class userProfile extends AppCompatActivity {
                 Log.d(TAG, "onDataChange: "+ dataSnapshot.child("username").getValue());
                 editUserName.setText(dataSnapshot.child("username").getValue().toString());
                 editEmail.setText(firebaseUser.getEmail());
+                imageUrl = dataSnapshot.child("imageURL").getValue().toString();
+                Log.d(TAG, "onDataChange: "+ Uri.parse(imageUrl));
+                Uri uri = Uri.parse(imageUrl);
+//                imageView.setImageURI(uri);
+                Glide.with(getApplicationContext()).load(uri).override(200,200).centerCrop().into(imageView);
             }
 
             @Override
@@ -94,18 +101,18 @@ public class userProfile extends AppCompatActivity {
 
             }
         });
-        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                    Glide.with(getApplicationContext()).load(uri).placeholder(R.drawable.profile).override(200,200).centerCrop().into(imageView);
-            }
-
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: "+ e.getMessage());
-            }
-        });
+//        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                    Glide.with(getApplicationContext()).load(uri).placeholder(R.drawable.profile).override(200,200).centerCrop().into(imageView);
+//            }
+//
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d(TAG, "onFailure: "+ e.getMessage());
+//            }
+//        });
 
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +211,27 @@ public class userProfile extends AppCompatActivity {
                     double progress = (100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
                     progressDialog.setMessage("Loading... " + ((int) progress) + "%");
 
+                }
+            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    StorageReference reference = storageReference.child("images/"+ firebaseUser.getUid()+".jpeg");
+                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                            final HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("id", firebaseUser.getUid());
+                            hashMap.put("username", editUserName.getText().toString());
+                            hashMap.put("imageURL", uri.toString());
+                            databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(userProfile.this,"Data Upload",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
                 }
             });
         }

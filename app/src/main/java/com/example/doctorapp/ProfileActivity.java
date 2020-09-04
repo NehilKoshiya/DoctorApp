@@ -7,24 +7,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,16 +28,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,19 +51,24 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     private AppBarConfiguration mAppBarConfiguration;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+    private DatabaseReference mDatabase;
     TextView headingText;
-    RecyclerView recyclerView1,recyclerView2,recyclerView3;
-    LinearLayout linearLayout,cardView;
+    RecyclerView recyclerView1, recyclerView2, recyclerView3;
+    LinearLayout linearLayout, cardView;
     DoctorListAdapter doctorListAdapter;
     VerDrListAdapter verDrListAdapter;
     LocalDrListAdapter localDrListAdapter;
     Spinner dropdown;
 
-    CardView multiCard,verbalCard,localCard;
+    CardView multiCard, verbalCard, localCard;
+    StorageReference storageReference;
+    FirebaseStorage storage;
+    DatabaseReference databaseReference;
 
     List<DoctorListModel> drList;
     List<VerbalDrListModal> verbalDr;
     List<LocalDrListModal> localDr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +85,12 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         linearLayout = findViewById(R.id.heading);
         dropdown = findViewById(R.id.spinner);
 
-        String[] items = new String[]{"Multispeciality","Verbal","Local"};
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+        String[] items = new String[]{"Multispeciality", "Verbal", "Local"};
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView1.setLayoutManager(layoutManager);
@@ -98,55 +105,138 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         getSupportActionBar().hide();
         getSupportActionBar().setTitle("Dr. Mob");
 
+
+        Query recentPostsQuery = mDatabase.child("Doctors").child("Multi Specialist").limitToFirst(100);
         drList = new ArrayList<>();
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        drList.add(new DoctorListModel("Dr. Amit Butani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        recentPostsQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d(TAG, "onChildChanged:" + dataSnapshot.getValue());
 
+                Log.d(TAG, "Address:" + dataSnapshot.child("Address").getValue());
+                String drName = dataSnapshot.child("drName").getValue().toString();
+                String drDegree = dataSnapshot.child("drDegree").getValue().toString();
+                String address = dataSnapshot.child("Address").getValue().toString();
+                StorageReference reference1 = storageReference.child("images").child("Doctors").child("Multi Specialist").child(drName);
+                final Uri[] drProfile = new Uri[1];
+                reference1.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        drProfile[0] = uri;
+                        Log.d(TAG, "onSuccess: "+uri);
+                    }
+                });
+                Log.d(TAG, "onChildAdded: "+ drProfile[0]);
+                drList.add(new DoctorListModel(drName,drDegree,address, drProfile[0]));            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
+            }
+        });
+
+        StorageReference reference2 = storageReference.child("images").child("Doctors").child("Verbal Level");
+        Query recentPostsQuery2 = mDatabase.child("Doctors").child("Verbal Level").limitToFirst(100);
         verbalDr = new ArrayList<>();
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        verbalDr.add(new VerbalDrListModal("Dr. Smit Vaghani","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        recentPostsQuery2.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d(TAG, "onChildChanged:" + dataSnapshot.getValue());
 
+                Log.d(TAG, "Address:" + dataSnapshot.child("Address").getValue());
+                String drName = dataSnapshot.child("drName").getValue().toString();
+                String drDegree = dataSnapshot.child("drDegree").getValue().toString();
+                String address = dataSnapshot.child("Address").getValue().toString();
 
+                verbalDr.add(new VerbalDrListModal(drName,drDegree,address,R.drawable.profile));            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
+            }
+        });
+
+        StorageReference reference3 = storageReference.child("images").child("Doctors").child("Local Level");
+        Query recentPostsQuery3 = mDatabase.child("Doctors").child("Local Level").limitToFirst(100);
         localDr = new ArrayList<>();
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
-        localDr.add(new LocalDrListModal("Dr. Nehil Kosiya","(M.B.B.S,M.D)","Address",R.drawable.profile));
+        recentPostsQuery3.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d(TAG, "onChildChanged:" + dataSnapshot.getValue());
+
+                Log.d(TAG, "Address:" + dataSnapshot.child("Address").getValue());
+                String drName = dataSnapshot.child("drName").getValue().toString();
+                String drDegree = dataSnapshot.child("drDegree").getValue().toString();
+                String address = dataSnapshot.child("Address").getValue().toString();
+
+                localDr.add(new LocalDrListModal(drName,drDegree,address,R.drawable.profile));            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d(TAG, "onChildRemoved:" + dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w(TAG, "postComments:onCancelled", databaseError.toException());
+            }
+        });
 
 
-        doctorListAdapter = new DoctorListAdapter(drList,getApplicationContext());
+        doctorListAdapter = new DoctorListAdapter(drList, getApplicationContext());
         recyclerView1.setAdapter(doctorListAdapter);
 //
-        verDrListAdapter = new VerDrListAdapter(verbalDr,getApplicationContext());
+        verDrListAdapter = new VerDrListAdapter(verbalDr, getApplicationContext());
         recyclerView2.setAdapter(verDrListAdapter);
 //
-        localDrListAdapter = new LocalDrListAdapter(localDr,getApplicationContext());
+        localDrListAdapter = new LocalDrListAdapter(localDr, getApplicationContext());
         recyclerView3.setAdapter(localDrListAdapter);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("username");
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("username");
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -155,7 +245,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         multiCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               cardView.setVisibility(View.GONE);
+                cardView.setVisibility(View.GONE);
                 recyclerView1.setVisibility(View.VISIBLE);
                 recyclerView2.setVisibility(View.GONE);
                 recyclerView3.setVisibility(View.GONE);
@@ -200,17 +290,35 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         final TextView tt1 = (TextView) headerView.findViewById(R.id.username);
         final CircleImageView profileImage = headerView.findViewById(R.id.profile_image);
 
-        StorageReference ref =  FirebaseStorage.getInstance().getReference().child("images").child(firebaseUser.getUid()+".jpeg");
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(Uri uri) {
-//                Uri img = Uri.parse("https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
-
-                Glide.with(getApplicationContext()).load(uri).placeholder(R.drawable.profile).override(200,200).centerCrop().into(profileImage);
-
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange: "+ dataSnapshot.child("username").getValue());
+                String imageUrl = dataSnapshot.child("imageURL").getValue().toString();
+                Log.d(TAG, "onDataChange: "+ Uri.parse(imageUrl));
+                Uri uri = Uri.parse(imageUrl);
+//                imageView.setImageURI(uri);
+                Glide.with(getApplicationContext()).load(uri).placeholder(R.drawable.prof).override(200,200).centerCrop().into(profileImage);
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
+
+//        StorageReference ref = FirebaseStorage.getInstance().getReference().child("images").child(firebaseUser.getUid() + ".jpeg");
+//        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+////                Uri img = Uri.parse("https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
+//
+//                Glide.with(getApplicationContext()).load(uri).placeholder(R.drawable.profile).override(200, 200).centerCrop().into(profileImage);
+//
+//            }
+//
+//        });
 //        tt1.setText(reference.getKey());
 
         Log.d(TAG, "onCreate: " + reference);
@@ -222,15 +330,16 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 tt1.setText(dataSnapshot.getValue().toString());
                 Log.d(TAG, "onCreate: " + dataSnapshot.getValue());
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-        
+
         TextView tt = (TextView) headerView.findViewById(R.id.email);
         tt.setText(firebaseUser.getEmail());
-        
+
 //        imageView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -245,9 +354,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         toggle.syncState();
 
 
-
     }
-
 
 
     @Override
@@ -257,7 +364,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         return true;
     }
 
-//    @Override
+    //    @Override
 //    public boolean onSupportNavigateUp() {
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
@@ -280,7 +387,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             getSupportActionBar().show();
             headingText.setText("Multispeciality Hospital");
             return true;
-        }else if(id == R.id.vl){
+        } else if (id == R.id.vl) {
             cardView.setVisibility(View.GONE);
             recyclerView1.setVisibility(View.GONE);
             recyclerView2.setVisibility(View.VISIBLE);
@@ -289,7 +396,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             getSupportActionBar().show();
             headingText.setText("Verbal Level Hospital");
             return true;
-        }else if(id == R.id.ll){
+        } else if (id == R.id.ll) {
             cardView.setVisibility(View.GONE);
             recyclerView1.setVisibility(View.GONE);
             recyclerView2.setVisibility(View.GONE);
@@ -307,13 +414,13 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-      if (id == R.id.logout) {
+        if (id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             return true;
-        }else if(id == R.id.add_doctor){
-          startActivity(new Intent(getApplicationContext(), AddDoctor.class));
-      }
+        } else if (id == R.id.add_doctor) {
+            startActivity(new Intent(getApplicationContext(), AddDoctor.class));
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

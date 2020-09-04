@@ -7,9 +7,9 @@ public class DoctorListModel {
     String drName;
     String deDegree;
     String address;
-    int profileImage;
+    Uri profileImage;
 
-    public DoctorListModel(String drName, String deDegree, String address, int profileImage) {
+    public DoctorListModel(String drName, String deDegree, String address, Uri profileImage) {
         this.drName = drName;
         this.deDegree = deDegree;
         this.address = address;
@@ -40,11 +40,11 @@ public class DoctorListModel {
         this.address = address;
     }
 
-    public int getProfileImage() {
+    public Uri getProfileImage() {
         return profileImage;
     }
 
-    public void setProfileImage(int profileImage) {
+    public void setProfileImage(Uri profileImage) {
         this.profileImage = profileImage;
     }
 }

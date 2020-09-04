@@ -128,6 +128,7 @@ public class AddDoctor extends AppCompatActivity {
         hashMap.put("drDegree", drDegree.getText().toString());
         hashMap.put("Address", address.getText().toString());
         hashMap.put("Hosptal Type", hosLevel);
+        hashMap.put("imageUrl","default");
 
         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -150,6 +151,29 @@ public class AddDoctor extends AppCompatActivity {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
 
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            StorageReference reference = storageReference.child("images").child("Doctors").child(hosLevel).child(drName.getText().toString());
+                            reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Doctors").child(hosLevel).child(drName.getText().toString());
+                                    HashMap<String, String> hashMap = new HashMap<>();
+                                    hashMap.put("drName", drName.getText().toString());
+                                    hashMap.put("drDegree", drDegree.getText().toString());
+                                    hashMap.put("Address", address.getText().toString());
+                                    hashMap.put("Hosptal Type", hosLevel);
+                                    hashMap.put("imageUrl",uri.toString());
+                                    reference.setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(AddDoctor.this,"Success",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

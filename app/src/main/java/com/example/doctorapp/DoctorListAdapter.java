@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -33,7 +35,7 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DoctorListModel model = drList.get(position);
-        holder.profileImage.setImageResource(model.getProfileImage());
+        Glide.with(context).load(model.getProfileImage()).placeholder(R.drawable.profile).override(200,200).centerCrop().into(holder.profileImage);
         holder.drName.setText(model.getDrName());
         holder.drDegree.setText(model.getDeDegree());
         holder.address.setText(model.getAddress());
